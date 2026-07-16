@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.automation</groupId>
+    <artifactId>AutomationFramework</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>UI Automation Framework</name>
+    <description>
+        Reusable Selenium + TestNG UI automation framework published as a Maven dependency.
+        Consumers depend on this artifact and write their own test scripts by extending
+        com.automation.base.BaseTest and com.automation.pages.BasePage. The framework's
+        internal source (base code and utilities) is distributed only as the compiled jar,
+        not as sources.
+    </description>
+
+    <url>https://github.com/Gwl-Manoj/automation_framework</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Automation Framework Team</name>
+            <organization>Galaxy Weblinks</organization>
+            <organizationUrl>https://www.galaxyweblinks.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/Gwl-Manoj/automation_framework.git</connection>
+        <developerConnection>scm:git:https://github.com/Gwl-Manoj/automation_framework.git</developerConnection>
+        <url>https://github.com/Gwl-Manoj/automation_framework</url>
+    </scm>
+
+    <!--
+      ============================================================================
+      PUBLISHING THIS FRAMEWORK AS A MAVEN DEPENDENCY (GitHub-hosted Maven repo)
+      ============================================================================
+      The framework is published to a Maven repository that lives in a dedicated
+      "maven-repo" branch of this GitHub repository. Consumers reference it directly
+      from GitHub (no local install and no authentication required for public repos):
+
+      Consumer pom.xml:
+        <repositories>
+            <repository>
+                <id>automation-framework-github</id>
+                <url>https://raw.githubusercontent.com/Gwl-Manoj/automation_framework/maven-repo/</url>
+            </repository>
+        </repositories>
+
+        <dependency>
+            <groupId>com.automation</groupId>
+            <artifactId>AutomationFramework</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+      How publishing works:
+        1. `mvn clean deploy` builds the jar and copies it into a local staging
+           directory (target/maven-repo-staging) configured in <distributionManagement>.
+        2. The GitHub Actions workflow (.github/workflows/publish.yml) runs on a
+           version tag (v*) or manual dispatch, performs the deploy, then force-pushes
+           the staging directory to the "maven-repo" branch.
+        3. The artifacts then become available at the raw.githubusercontent.com URL
+           above.
+
+      The consumer places its own config/config.properties on the classpath (or passes
+      -Dconfig.file=/path/to/config.properties) and writes tests that extend
+      com.automation.base.BaseTest. No framework source code is exposed.
+
+      NOTE: Example/browser tests in src/test are skipped during the build
+      (skipTests). Run them locally with: mvn test -DskipTests=false
+      ============================================================================
+    -->
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <selenium.version>4.15.0</selenium.version>
+        <testng.version>7.10.2</testng.version>
+        <extentreports.version>5.0.9</extentreports.version>
+        <apache.poi.version>5.2.5</apache.poi.version>
+        <log4j.version>2.20.0</log4j.version>
+        <webdrivermanager.version>5.6.2</webdrivermanager.version>
+        <jackson.version>2.15.2</jackson.version>
+        <slf4j.version>2.0.9</slf4j.version>
+        <commons.io.version>2.15.1</commons.io.version>
+        <maven.surefire.plugin>3.2.2</maven.surefire.plugin>
+        <maven.jar.plugin>3.4.0</maven.jar.plugin>
+        <maven.deploy.plugin>3.1.1</maven.deploy.plugin>
+    </properties>
+
+    <dependencies>
+        <!-- Selenium -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
+
+        <!-- WebDriver Manager -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
+        </dependency>
+
+        <!-- TestNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+        </dependency>
+
+        <!-- Extent Reports -->
+        <dependency>
+            <groupId>com.aventstack</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>${extentreports.version}</version>
+        </dependency>
+
+        <!-- Apache POI for Excel -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+
+        <!-- SLF4J API (used directly by the framework) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Log4j 2 implementation + SLF4J binding (runtime, so logging works out of the box) -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Apache Commons IO (used by ScreenshotUtil) -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons.io.version}</version>
+        </dependency>
+
+        <!-- Jackson for JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!-- JSON Schema Validator -->
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.0.78</version>
+        </dependency>
+
+        <!-- Rest Assured (test scope only) -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.3.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Lombok (optional, provided) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- JavaMail for Email -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
+
+            <!-- Produce the framework jar with manifest metadata -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <!--
+              Example/browser tests live in src/test and are skipped during the
+              library build so `mvn install` / `mvn deploy` succeed without a browser.
+              Override with: mvn test -DskipTests=false
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin}</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>TestSuites/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <forkCount>0</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+            </plugin>
+
+            <!-- Enables `mvn deploy` to a remote repository -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven.deploy.plugin}</version>
+                <configuration>
+                    <!--
+                      BLACK-BOX POLICY: only the compiled public API jar + pom are
+                      deployed. No sources or javadoc jars are published, so consumers
+                      depend on the artifact and write scripts using the existing public
+                      methods (BaseTest, BasePage, WebDriverFactory, ConfigReader,
+                      ExtentReportManager, WaitHelper, ...) without access to the
+                      framework's internal source/implementation.
+                    -->
+                    <skipSources>true</skipSources>
+                    <skipJavadoc>true</skipJavadoc>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <!--
+      Deployment target for `mvn clean deploy`. The artifact is copied into a local
+      staging directory which the CI workflow then publishes to the "maven-repo"
+      branch of this GitHub repository (see .github/workflows/publish.yml).
+      This replaces the previous local file-based repository.
+    -->
+    <distributionManagement>
+        <repository>
+            <id>github-maven-repo</id>
+            <name>GitHub Maven Repository (maven-repo branch)</name>
+            <url>file://${project.basedir}/target/maven-repo-staging</url>
+        </repository>
+    </distributionManagement>
+</project>
