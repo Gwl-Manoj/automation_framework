@@ -1,0 +1,22 @@
+# Build artifacts
+target/
+test-output/
+
+# Local maven staging / repo directories
+local-maven-repo/
+maven-repo-staging/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
