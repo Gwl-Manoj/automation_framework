@@ -269,6 +269,18 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>${maven.deploy.plugin}</version>
+                <configuration>
+                    <!--
+                      BLACK-BOX POLICY: only the compiled public API jar + pom are
+                      deployed. No sources or javadoc jars are published, so consumers
+                      depend on the artifact and write scripts using the existing public
+                      methods (BaseTest, BasePage, WebDriverFactory, ConfigReader,
+                      ExtentReportManager, WaitHelper, ...) without access to the
+                      framework's internal source/implementation.
+                    -->
+                    <skipSources>true</skipSources>
+                    <skipJavadoc>true</skipJavadoc>
+                </configuration>
             </plugin>
         </plugins>
     </build>
