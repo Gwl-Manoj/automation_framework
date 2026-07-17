@@ -1,0 +1,3 @@
+com\automation\locators\HomePageLocators.class
+com\automation\tests\SubscriptionTest.class
+com\automation\pages\HomePage.class
